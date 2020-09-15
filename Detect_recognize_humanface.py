@@ -3,6 +3,9 @@ import numpy as np
 from copy import deepcopy
 import cv2
 
+#http://dlib.net/files/dlib_face_recognition_resnet_model_v1.dat
+#http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2
+
 img_1 = r'1.jpg'
 img_2 = r'2.jpg'
 img_3 = r'3.jpg'
@@ -25,7 +28,7 @@ class d_r_h(object):
                         cv2.LINE_AA)
             # cv2.drawKeypoints(img, (sp.part(i).x, sp.part(i).y),img, [0, 0, 255])
         if save:
-            cv2.imwrite(str(np.random.randint(100))+'.jpg', img)
+            cv2.imwrite(title+str(np.random.randint(100))+'.jpg', img)
         cv2.imshow(title, img)
         cv2.waitKey(0)
         cv2.destroyWindow(title)
@@ -45,12 +48,12 @@ class d_r_h(object):
             print("Computing descriptor on aligned image ..")
             images = dlib.get_face_chip(image, shape, size=self.img_size)
 
-            self.point_draw(image, shape, 'before image warping', save=False)
+            self.point_draw(image, shape, 'before image warping', save=True)
             shapeimage = np.array(images).astype(np.uint8)
             dets = self.detector(shapeimage, 1)
             if len(dets) == 1:
                 point68 = self.predictor(shapeimage, dets[0])
-                self.point_draw(shapeimage, point68, 'after image warping', save=False)
+                self.point_draw(shapeimage, point68, 'after image warping', save=True)
 
             #计算128维特征向量
             face_descriptor_from_prealigned_image = self.recognition.compute_face_descriptor(images)
